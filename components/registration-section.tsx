@@ -28,7 +28,12 @@ export function RegistrationSection({ user }: RegistrationSectionProps) {
         const form = document.getElementById("registration-form") as HTMLFormElement
         form?.reset()
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Error al registrar")
+        setSuccess(false)
+        if (err instanceof Error) {
+          setError(err.message)
+        } else {
+          setError("Error al registrar. Por favor, inténtalo de nuevo.")
+        }
       }
     })
   }
@@ -77,9 +82,9 @@ export function RegistrationSection({ user }: RegistrationSectionProps) {
               <div className="p-6 rounded-lg bg-primary/10 border border-primary/30 text-center mb-4">
                 <CheckCircle className="w-12 h-12 mx-auto mb-3 text-primary" />
                 <p className="text-lg font-semibold">{codeSuccess}</p>
-                <Button 
-                  onClick={() => setCodeSuccess(null)} 
-                  variant="outline" 
+                <Button
+                  onClick={() => setCodeSuccess(null)}
+                  variant="outline"
                   className="mt-4"
                 >
                   Ingresar otro código
@@ -148,7 +153,7 @@ export function RegistrationSection({ user }: RegistrationSectionProps) {
             <CheckCircle className="w-16 h-16 mx-auto mb-4 text-primary" />
             <h3 className="text-2xl font-bold mb-2">¡Registro Exitoso!</h3>
             <p className="text-muted-foreground mb-6">
-              Gracias por unirte a la familia SPINAL. Te hemos enviado un correo de bienvenida. 
+              Gracias por unirte a la familia SPINAL. Te hemos enviado un correo de bienvenida.
               Ahora puedes iniciar sesión para comenzar a acumular puntos.
             </p>
             <Button onClick={() => setSuccess(false)} variant="outline">
