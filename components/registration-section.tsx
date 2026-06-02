@@ -22,18 +22,13 @@ export function RegistrationSection({ user }: RegistrationSectionProps) {
     setError(null)
     setSuccess(false)
     startTransition(async () => {
-      try {
-        await addRegistration(formData)
+      const result = await addRegistration(formData)
+      if (result.error) {
+        setError(result.error)
+      } else {
         setSuccess(true)
         const form = document.getElementById("registration-form") as HTMLFormElement
         form?.reset()
-      } catch (err) {
-        setSuccess(false)
-        if (err instanceof Error) {
-          setError(err.message)
-        } else {
-          setError("Error al registrar. Por favor, inténtalo de nuevo.")
-        }
       }
     })
   }

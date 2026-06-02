@@ -12,7 +12,7 @@ const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KE
 
 function validateRut(rut: string): boolean {
   const cleanRut = rut.replace(/[.-]/g, "").toUpperCase()
-  
+
   // Must be exactly 8 digits + 1 verifier (digit or K)
   if (!/^[0-9]{8}[0-9K]$/.test(cleanRut)) {
     return false
@@ -99,7 +99,7 @@ export async function addRegistration(formData: FormData) {
   }
 
   if (!validateRut(rut)) {
-    throw new Error("Por favor ingresa un RUT válido (formato: 12345678-9)")
+    return { error: "Por favor ingresa un RUT válido (formato: 12345678-9)" }
   }
 
   const formattedRut = formatRut(rut)
@@ -116,13 +116,14 @@ export async function addRegistration(formData: FormData) {
     })
   } catch (error: unknown) {
     if (error && typeof error === "object" && "code" in error && error.code === "23505") {
-      throw new Error("Este RUT ya está registrado")
+      return { error: "Este RUT ya está registrado" }
     }
-    throw new Error("Error al registrar. Por favor intenta de nuevo.")
+    return { error: "Error al registrar. Por favor intenta de nuevo." }
   }
 
   await sendWelcomeEmail(email.trim().toLowerCase(), name.trim())
   revalidatePath("/")
+  return { success: true }
 }
 
 export async function login(formData: FormData) {
